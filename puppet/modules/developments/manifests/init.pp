@@ -6,6 +6,7 @@ class developments {
     "curl",
     "git",
     "g++",
+    "libbost-all-dev",
     "libgflags-dev",
     "libgoogle-glog-dev",
     "libtool",
@@ -33,13 +34,21 @@ class developments {
  
   Package <| |> -> Exec["bazel"]
   exec {"bazel":
-    #path => "./",
     command => "/bin/bash bazel.sh > /var/log/puppet-bazel.log",
-    #creates => TODO
+    timeout => 0,
   }
 
-  package {
-    "bazel":
-    ensure => "latest",
+  Package <| |> -> Exec["protobuf"]
+  exec {"protobuf":
+    command => "/bin/bash protobuf.sh > /var/log/protobuf.log",
+    creates => "/usr/local/include/google/message.h",    
+    timeout => 0,
+  }
+
+  Package <| |> -> Exec["opencv"]
+  exec {"opencv":
+    command => "/bin/bash opencv.sh > /var/log/opencv.log",
+    creates => "/usr/local/include/opencv/cv.h",
+    timeout => 0,
   }
 }
